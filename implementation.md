@@ -866,7 +866,8 @@ All routes extract `device_id` from `X-Device-Id` header. Return `AppError::Miss
 **Branch:** `feat/phase-5-push`  
 **Estimated Time:** 4 hours  
 **Assigned To:** Developer B  
-**Depends On:** Phase 4 merged to `main`
+**Depends On:** Phase 4 merged to `main`  
+**Status:** COMPLETE ✓ — merged to `main`
 
 ### Goal
 Users can subscribe to push notifications. Backend can deliver real push notifications via VAPID. iOS PWA install flow is handled gracefully.
@@ -1022,7 +1023,8 @@ UNSUBSCRIBED → show "Enable Alerts" button
 **Branch:** `feat/phase-6-strategy`  
 **Estimated Time:** 4 hours  
 **Assigned To:** Developer C  
-**Depends On:** Phase 5 merged to `main`
+**Depends On:** Phase 5 merged to `main`  
+**Status:** COMPLETE ✓ — merged to `main`
 
 ### Goal
 The admin can trigger a market event from `/admin`. The backend generates a strategy via LLM in the background and sends push notifications. Users tap the notification and land on the strategy page.
@@ -1166,7 +1168,8 @@ The admin can trigger a market event from `/admin`. The backend generates a stra
 **Branch:** `feat/phase-7-polish`  
 **Estimated Time:** 4 hours  
 **Assigned To:** Developer A  
-**Depends On:** Phase 6 merged to `main`
+**Depends On:** Phase 6 merged to `main`  
+**Status:** COMPLETE ✓ — merged to `main`
 
 ### Goal
 The app looks and feels premium. The demo runs smoothly 3 times in a row without a single failure.
@@ -1275,6 +1278,12 @@ Pattern: `navigator.vibrate?.([100, 50, 100])` (guarded — not available on iOS
 | Phase | Branch | Owner | Est. Time | Key Output |
 |---|---|---|---|---|
 | ~~1 — Foundation~~ | ~~`feat/phase-1-foundation`~~ | Dev A | 4h | ✓ Both services running, SQLite schema applied |
+| ~~2 — Scanning~~ | ~~`feat/phase-2-scanning`~~ | Dev B | 5h | ✓ Barcode + image scan working end-to-end |
+| ~~3 — Intelligence~~ | ~~`feat/phase-3-intelligence`~~ | Dev C | 3h | ✓ AI intelligence card with cache |
+| ~~4 — Watchlist~~ | ~~`feat/phase-4-watchlist`~~ | Dev A | 3h | ✓ Watchlist + bottom navigation |
+| ~~5 — Push~~ | ~~`feat/phase-5-push`~~ | Dev B | 4h | ✓ Push notifications + VAPID backend |
+| ~~6 — Strategy~~ | ~~`feat/phase-6-strategy`~~ | Dev C | 4h | ✓ Event simulator + strategy page |
+| ~~7 — Polish~~ | ~~`feat/phase-7-polish`~~ | Dev A | 4h | ✓ PWA icons, error boundary, Lighthouse meta |
 | 2 — Scanning | `feat/phase-2-scanning` | Dev B | 5h | Barcode + image scan working end-to-end |
 | 3 — Intelligence | `feat/phase-3-intelligence` | Dev C | 3h | AI intelligence card with cache |
 | 4 — Watchlist | `feat/phase-4-watchlist` | Dev A | 3h | Watchlist + bottom navigation |

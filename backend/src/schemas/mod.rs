@@ -1,5 +1,6 @@
 pub mod intelligence;
 pub mod scan;
+pub mod watchlist;
 
 use serde::Serialize;
 

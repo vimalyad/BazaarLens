@@ -1,6 +1,7 @@
 pub mod health;
 pub mod intelligence;
 pub mod scan;
+pub mod watchlist;
 
 use axum::Router;
 use std::sync::Arc;
@@ -12,4 +13,5 @@ pub fn router() -> Router<Arc<AppState>> {
         .merge(health::router())
         .merge(scan::router())
         .merge(intelligence::router())
+        .merge(watchlist::router())
 }

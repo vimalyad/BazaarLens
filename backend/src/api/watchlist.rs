@@ -70,7 +70,9 @@ async fn add(
     let already_watching = rows_affected == 0;
     info!(device_id = %did, product_id = %req.product_id, already_watching, "watchlist add");
 
-    Ok(Json(ApiResponse::ok(WatchlistAddResponse { already_watching })))
+    Ok(Json(ApiResponse::ok(WatchlistAddResponse {
+        already_watching,
+    })))
 }
 
 /// Returns all watched products for the device, joined with product details and the
@@ -92,13 +94,12 @@ async fn remove(
 ) -> Result<Json<ApiResponse<()>>, AppError> {
     let did = device_id(&headers)?;
 
-    let rows_affected =
-        sqlx::query("DELETE FROM watchlist WHERE device_id = ? AND product_id = ?")
-            .bind(&did)
-            .bind(&product_id)
-            .execute(&state.db)
-            .await?
-            .rows_affected();
+    let rows_affected = sqlx::query("DELETE FROM watchlist WHERE device_id = ? AND product_id = ?")
+        .bind(&did)
+        .bind(&product_id)
+        .execute(&state.db)
+        .await?
+        .rows_affected();
 
     if rows_affected == 0 {
         return Err(AppError::NotFound("NOT_WATCHING".to_string()));

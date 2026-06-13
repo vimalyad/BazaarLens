@@ -55,17 +55,46 @@ Format: `[version] — date — phase/branch — description`
 
 ---
 
-## Upcoming — Phase 2 (`feat/phase-2-scanning`)
+## Phase 2 — Product Scanning (`feat/phase-2-scanning`)
 
-> Blocked on Phase 1.
+### 2026-06-13 — Scan + identify, end-to-end
 
-### Expected Changes
-- `ProductSource` trait + `OpenFoodFacts` + `UpcItemDb` implementations
-- `LlmService` (OpenRouter client with vision support)
-- `POST /api/scan/barcode` and `POST /api/scan/image` routes
-- `useScanner` hook (ZXing)
-- `BarcodeScanner`, `ImageUpload`, `ScanResult`, `CameraPermissionDenied` components
-- `/scan` page with full state machine
+#### Added — Backend
+- `schemas/scan.rs` — `BarcodeScanRequest`, `ImageScanRequest`, `ProductResponse`
+- `schemas/mod.rs` — generic `ApiResponse<T>` success envelope
+- `services/product_lookup/` — `ProductSource` trait with `OpenFoodFacts` + `UpcItemDb`
+  implementations and a cache-first orchestrator (split into `mod.rs` + `sources.rs`
+  to stay under the 200-line file limit)
+- `services/llm.rs` — OpenRouter client: `call_text`, `call_vision`, fence stripping,
+  one JSON-parse retry, 30s timeout, forced `json_object` responses
+- `api/scan.rs` — `POST /api/scan/barcode` (8–14 digit validation, 404 on miss) and
+  `POST /api/scan/image` (size cap, Minimax M3 vision, persisted as `vision_llm`)
+- `main.rs` — `ProductLookupService` and `LlmService` wired into `AppState`
+
+#### Added — Frontend
+- `hooks/useDeviceId.ts` — SSR-safe persistent anonymous identity
+- `hooks/useScanner.ts` — ZXing `BrowserMultiFormatReader` behind an SSR-safe surface
+- `components/scan/BarcodeScanner.tsx` — full-screen camera + animated corner overlay
+- `components/scan/CameraPermissionDenied.tsx`, `ImageUpload.tsx` — fallback path
+- `services/productLookup.ts` — canvas `resizeImage` (≤800px, JPEG q0.8)
+- `components/scan/ScanResult.tsx` — bottom sheet, AI-identified badge, low-confidence
+  warning, hands product to `/product/[id]` via sessionStorage
+- `app/scan/page.tsx` — `IDLE → SCANNING → IDENTIFYING → IDENTIFIED / UPLOAD_FALLBACK`
+
+#### Deviations from plan (intentional)
+- **Trait async:** `ProductSource` returns a boxed future instead of using `async fn`
+  in trait + `async-trait`. Keeps the trait object-safe with **zero new crates**, so
+  `cargo build --locked` passes without regenerating `Cargo.lock`.
+- **Error envelope:** errors use `{ code, message }` (the Phase 1 `error.rs` /
+  `lib/api.ts` shape), not the bare-string form in `docs/api.md`.
+- **Add-to-Watchlist CTA:** deferred from `ScanResult` to Phase 3/4, where the
+  watchlist API and `AddToWatchlistButton` are built.
+
+#### Verified locally
+- `cargo fmt --check`, `cargo clippy -D warnings`, `cargo build --locked` — all pass
+- `npm run lint`, `npm run build` — pass, no errors
+- Live: barcode lookup (Nutella via Open Food Facts), cache hit on re-scan, UPC Item DB
+  fallback, `INVALID_BARCODE` rejection
 
 ---
 
